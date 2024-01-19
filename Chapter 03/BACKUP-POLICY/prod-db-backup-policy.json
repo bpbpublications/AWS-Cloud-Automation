@@ -1,0 +1,150 @@
+{
+    "plans": {
+        "prod-db-backup-plan": {
+            "regions": {
+                "@@assign": [
+                    "us-east-2",
+                    "us-west-1",
+                    "us-west-2",
+                    "us-east-1"
+                ]
+            },
+            "rules": {
+                "prod-db-daily-backup-rule": {
+                    "lifecycle": {
+                        "move_to_cold_storage_after_days": {
+                            "@@assign": "90"
+                        }
+                    },
+                    "target_backup_vault_name": {
+                        "@@assign": "prod-db-daily-backup-vault"
+                    },
+                    "recovery_point_tags": {
+                        "Restore": {
+                            "tag_key": {
+                                "@@assign": "Restore"
+                            },
+                            "tag_value": {
+                                "@@assign": "True"
+                            }
+                        },
+                        "Env": {
+                            "tag_key": {
+                                "@@assign": "Env"
+                            },
+                            "tag_value": {
+                                "@@assign": "Prod"
+                            }
+                        },
+                        "App": {
+                            "tag_key": {
+                                "@@assign": "App"
+                            },
+                            "tag_value": {
+                                "@@assign": "DB"
+                            }
+                        }
+                    },
+                    "copy_actions": {
+                        "arn:aws:backup:us-west-2:$account:backup-vault:prod-db-daily-backup-replication-vault": {
+                            "target_backup_vault_arn": {
+                                "@@assign": "arn:aws:backup:us-west-2:$account:backup-vault:prod-db-daily-backup-replication-vault"
+                            },
+                            "lifecycle": {}
+                        }
+                    }
+                },
+                "prod-db-monthly-backup-rule": {
+                    "schedule_expression": {
+                        "@@assign": "cron(0 5 25 * ? *)"
+                    },
+                    "lifecycle": {
+                        "move_to_cold_storage_after_days": {
+                            "@@assign": "180"
+                        }
+                    },
+                    "target_backup_vault_name": {
+                        "@@assign": "prod-db-daily-backup-vault"
+                    },
+                    "recovery_point_tags": {
+                        "App": {
+                            "tag_key": {
+                                "@@assign": "App"
+                            },
+                            "tag_value": {
+                                "@@assign": "DB"
+                            }
+                        },
+                        "Env": {
+                            "tag_key": {
+                                "@@assign": "Env"
+                            },
+                            "tag_value": {
+                                "@@assign": "Prod"
+                            }
+                        },
+                        "Restore": {
+                            "tag_key": {
+                                "@@assign": "Restore"
+                            },
+                            "tag_value": {
+                                "@@assign": "True"
+                            }
+                        }
+                    },
+                    "copy_actions": {
+                        "arn:aws:backup:us-west-2:$account:backup-vault:prod-db-monthly-replication-vault": {
+                            "target_backup_vault_arn": {
+                                "@@assign": "arn:aws:backup:us-west-2:$account:backup-vault:prod-db-monthly-replication-vault"
+                            },
+                            "lifecycle": {}
+                        }
+                    }
+                }
+            },
+            "backup_plan_tags": {
+                "App": {
+                    "tag_key": {
+                        "@@assign": "App"
+                    },
+                    "tag_value": {
+                        "@@assign": "DB"
+                    }
+                },
+                "Env": {
+                    "tag_key": {
+                        "@@assign": "Env"
+                    },
+                    "tag_value": {
+                        "@@assign": "Prod"
+                    }
+                },
+                "Backup": {
+                    "tag_key": {
+                        "@@assign": "Backup"
+                    },
+                    "tag_value": {
+                        "@@assign": "True"
+                    }
+                }
+            },
+            "selections": {
+                "tags": {
+                    "prod-db-backup-resources": {
+                        "iam_role_arn": {
+                            "@@assign": "arn:aws:iam::$account:role/AWSBackupServiceRole"
+                        },
+                        "tag_key": {
+                            "@@assign": "Backup"
+                        },
+                        "tag_value": {
+                            "@@assign": [
+                                "True"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

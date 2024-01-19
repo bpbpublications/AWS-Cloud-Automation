@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: S3 Bucket to Host Our Simple CodePipeline CloudFormation Templates
+Resources:
+   S3Bucket:
+     DeletionPolicy: Retain
+     Type: 'AWS::S3::Bucket'
+     Description: Creating S3 Bucket to Host Our Simple CodePipeline CloudFormation Templates
+     Properties:
+       BucketName: s3-awsloudutomation-demo
+       AccessControl: Private
+       PublicAccessBlockConfiguration:
+         BlockPublicAcls: true
+         BlockPublicPolicy: true
+         IgnorePublicAcls: true
+         RestrictPublicBuckets: true
+       BucketEncryption:
+         ServerSideEncryptionConfiguration:
+           - ServerSideEncryptionByDefault:
+               SSEAlgorithm: AES256
+       VersioningConfiguration:
+         Status: Enabled
+Outputs:
+  S3Bucket:
+    Description: Bucket Created using this template.
+    Value: !Ref S3Bucket

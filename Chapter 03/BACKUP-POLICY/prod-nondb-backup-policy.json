@@ -1,0 +1,150 @@
+{
+    "plans": {
+        "prod-nondb-backup-plan": {
+            "regions": {
+                "@@assign": [
+                    "us-east-2",
+                    "us-west-1",
+                    "us-west-2",
+                    "us-east-1"
+                ]
+            },
+            "rules": {
+                "prod-nondb-daily-backup-rule": {
+                    "lifecycle": {
+                        "move_to_cold_storage_after_days": {
+                            "@@assign": "90"
+                        }
+                    },
+                    "target_backup_vault_name": {
+                        "@@assign": "prod-nondb-daily-backup-vault"
+                    },
+                    "recovery_point_tags": {
+                        "Restore": {
+                            "tag_key": {
+                                "@@assign": "Restore"
+                            },
+                            "tag_value": {
+                                "@@assign": "True"
+                            }
+                        },
+                        "Env": {
+                            "tag_key": {
+                                "@@assign": "Env"
+                            },
+                            "tag_value": {
+                                "@@assign": "prod"
+                            }
+                        },
+                        "App": {
+                            "tag_key": {
+                                "@@assign": "App"
+                            },
+                            "tag_value": {
+                                "@@assign": "nondb"
+                            }
+                        }
+                    },
+                    "copy_actions": {
+                        "arn:aws:backup:us-west-2:$account:backup-vault:prod-nondb-daily-backup-replication-vault": {
+                            "target_backup_vault_arn": {
+                                "@@assign": "arn:aws:backup:us-west-2:$account:backup-vault:prod-nondb-daily-backup-replication-vault"
+                            },
+                            "lifecycle": {}
+                        }
+                    }
+                },
+                "prod-nondb-monthly-backup-rule": {
+                    "schedule_expression": {
+                        "@@assign": "cron(0 5 25 * ? *)"
+                    },
+                    "lifecycle": {
+                        "move_to_cold_storage_after_days": {
+                            "@@assign": "180"
+                        }
+                    },
+                    "target_backup_vault_name": {
+                        "@@assign": "prod-nondb-daily-backup-vault"
+                    },
+                    "recovery_point_tags": {
+                        "App": {
+                            "tag_key": {
+                                "@@assign": "App"
+                            },
+                            "tag_value": {
+                                "@@assign": "nondb"
+                            }
+                        },
+                        "Env": {
+                            "tag_key": {
+                                "@@assign": "Env"
+                            },
+                            "tag_value": {
+                                "@@assign": "prod"
+                            }
+                        },
+                        "Restore": {
+                            "tag_key": {
+                                "@@assign": "Restore"
+                            },
+                            "tag_value": {
+                                "@@assign": "True"
+                            }
+                        }
+                    },
+                    "copy_actions": {
+                        "arn:aws:backup:us-west-2:$account:backup-vault:prod-nondb-monthly-replication-vault": {
+                            "target_backup_vault_arn": {
+                                "@@assign": "arn:aws:backup:us-west-2:$account:backup-vault:prod-nondb-monthly-replication-vault"
+                            },
+                            "lifecycle": {}
+                        }
+                    }
+                }
+            },
+            "backup_plan_tags": {
+                "App": {
+                    "tag_key": {
+                        "@@assign": "App"
+                    },
+                    "tag_value": {
+                        "@@assign": "nondb"
+                    }
+                },
+                "Env": {
+                    "tag_key": {
+                        "@@assign": "Env"
+                    },
+                    "tag_value": {
+                        "@@assign": "prod"
+                    }
+                },
+                "Backup": {
+                    "tag_key": {
+                        "@@assign": "Backup"
+                    },
+                    "tag_value": {
+                        "@@assign": "True"
+                    }
+                }
+            },
+            "selections": {
+                "tags": {
+                    "prod-nondb-backup-resources": {
+                        "iam_role_arn": {
+                            "@@assign": "arn:aws:iam::$account:role/AWSBackupServiceRole"
+                        },
+                        "tag_key": {
+                            "@@assign": "Backup"
+                        },
+                        "tag_value": {
+                            "@@assign": [
+                                "True"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+# Check CodeCommit help feature: 
+$ aws codecommit help
+
+# Create your first CodeCommit repository
+$ aws codecommit create-repository --repository-name awsca-chapter1-repo --repository-description "This is chapter1 demo repo"
+
+# Verify the repository that was actually created.
+$ aws codecommit list-repositories
+
+# Now Clone the repository you just created.
+$ git clone https://git-codecommit.us-east-2.amazonaws.com/v1/repos/awsca-chapter1-repo
+
+# AWS CloudFormation used to create a new CodeCommit
+ AWSTemplateFormatVersion: "2010-09-09"
+ Description: "This is codecommit repository created with cloud formation"
+ Resources:
+	CodeCommitRepository:
+	Type: "AWS::CodeCommit::Repository"
+		Properties:
+			RepositoryName: "awsca-chapter1-cloudFormation-repo"
+	Parameters: {}
+	Metadata: {}
+	Conditions: {}
+
+# Verify the repository was actually created.
+$ aws codecommit list-repositories
+
+# Check if npm application is installed
+$npm --version
+
+# Install AWS CDK using npm package
+$npm install -g aws-cdk
+
+# If everything is setup right, you should get the output after you checked the version
+$cdk --version
+
+# Initialize CDK environment for development needs
+$cdk init --language typescript
+
+# Get your account Identity.  
+$aws sts get-caller-identity
+
+# Get the default region.  
+ $aws configure get region
+ 
+# Now run the command below to bootstrap your account
+$cdk bootstrap aws://ACCOUNT-NUMBER/REGION
+npm test
+
+

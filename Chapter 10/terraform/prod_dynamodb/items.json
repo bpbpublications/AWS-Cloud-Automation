@@ -1,0 +1,112 @@
+{
+    "Customers": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "Id": {
+                "N": "1"
+            },
+            "firstName": {
+                "S": "John"
+            },
+            "lastName": {
+                "S": "Area"
+            },
+            "contact": {
+                "N": "99999999999"
+            }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "Id": {
+                "N": "2"
+            },
+            "firstName": {
+                "S": "Peter"
+            },
+            "lastName": {
+                "S": "Pan"
+            },
+            "contact": {
+                "N": "88888888888"
+            }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "Id": {
+                "N": "3"
+            },
+            "firstName": {
+                "S": "Bill"
+            },
+            "lastName": {
+                "S": "Anderson"
+            },
+            "contact": {
+                "N": "77777777777"
+            }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                   "Id": {
+                "N": "4"
+            },
+            "firstName": {
+                "S": "James"
+            },
+            "lastName": {
+                "S": "Odeyinka"
+            },
+            "contact": {
+                "N": "66666666666"
+            }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                  "Id": {
+                "N": "5"
+            },
+            "firstName": {
+                "S": "Bill"
+            },
+            "lastName": {
+                "S": "Clinton"
+            },
+            "contact": {
+                "N": "55555555555"
+            }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+               "Id": {
+                "N": "6"
+            },
+            "firstName": {
+                "S": "Joel"
+            },
+            "lastName": {
+                "S": "Gervengen"
+            },
+            "contact": {
+                "N": "44444444444"
+            }
+                }
+            }
+        }
+    ]
+}

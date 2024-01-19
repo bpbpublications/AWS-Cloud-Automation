@@ -1,0 +1,141 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Resources": {
+		"awsCloudAutomationDemoCodePipeline": {
+			"Type": "AWS::CodePipeline::Pipeline",
+			"Properties": {
+				"ArtifactStore": {
+					"Type": "S3",
+					"Location": "s3-awscloudautomation-demo"
+				},
+				"Name": "awscloudautomationdemocodepipeline",
+				"RoleArn": "arn:aws:iam::account-id:role/codepipeline_service_role",
+				"Stages": [{
+						"Name": "Source",
+						"Actions": [{
+							"Name": "Source",
+							"ActionTypeId": {
+								"Category": "Source",
+								"Owner": "AWS",
+								"Provider": "S3",
+								"Version": "1"
+							},
+							"Configuration": {
+								"PollForSourceChanges": "false",
+								"S3Bucket": "s3-awscloudautomation-demo",
+								"S3ObjectKey": "builds/awscloudautomationDemo.zip"
+							},
+							"OutputArtifacts": [{
+								"Name": "SourceArtifact"
+							}]
+						}]
+					},
+					{
+						"Name": "Build",
+						"Actions": [{
+							"Name": "Build",
+							"ActionTypeId": {
+								"Category": "Build",
+								"Owner": "AWS",
+								"Provider": "CodeBuild",
+								"Version": "1"
+							},
+							"RunOrder": 1,
+							"Configuration": {
+								"BatchEnabled": "false",
+								"ProjectName": {
+									"Fn::GetAtt": ["awscloudautomationDemoCodeBuild", "Arn"]
+								}
+							},
+							"OutputArtifacts": [{
+								"Name": "BuildArtifact"
+							}],
+							"InputArtifacts": [{
+								"Name": "SourceArtifact"
+							}],
+							"Namespace": "BuildVariables"
+						}]
+					},
+					{
+						"Name": "Deploy",
+						"Actions": [{
+								"Name": "create-changeset",
+								"ActionTypeId": {
+									"Category": "Deploy",
+									"Owner": "AWS",
+									"Provider": "CloudFormation",
+									"Version": "1"
+								},
+								"RunOrder": 1,
+								"Configuration": {
+									"ActionMode": "CHANGE_SET_REPLACE",
+									"Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+									"ChangeSetName": "awscloudautomationdemo-changeset",
+									"RoleArn": "arn:aws:iam::758678122039:role/AWSCloudFormationFullAccess",
+									"StackName": "awscloudautomationdemo",
+									"TemplatePath": "BuildArtifact::outputtemplate.yml"
+								},
+								"OutputArtifacts": [],
+								"InputArtifacts": [{
+									"Name": "BuildArtifact"
+								}],
+								"Namespace": "DeployVariables"
+							},
+							{
+								"Name": "execute-changeset",
+								"ActionTypeId": {
+									"Category": "Deploy",
+									"Owner": "AWS",
+									"Provider": "CloudFormation",
+									"Version": "1"
+								},
+								"RunOrder": 2,
+								"Configuration": {
+									"ActionMode": "CHANGE_SET_EXECUTE",
+									"ChangeSetName": "awscloudautomationdemo-changeset",
+									"StackName": "awscloudautomation-demo"
+								},
+								"OutputArtifacts": [],
+								"InputArtifacts": [{
+									"Name": "BuildArtifact"
+								}]
+							}
+						]
+					}
+				]
+			}
+		},
+		"awscloudautomationDemoCodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Name": "NodeJSBuild",
+				"Source": {
+					"Type": "CODEPIPELINE"
+				},
+				"Artifacts": {
+					"Type": "CODEPIPELINE",
+					"Name": "awscloudautomationdemocodepipeline"
+				},
+				"Environment": {
+					"Type": "LINUX_CONTAINER",
+					"Image": "aws/codebuild/standard:4.0",
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"ImagePullCredentialsType": "CODEBUILD"
+				},
+				"ServiceRole": "arn:aws:iam::account-id:role/codebuild_service_role",
+				"TimeoutInMinutes": 60,
+				"QueuedTimeoutInMinutes": 480,
+				"Tags": [],
+				"LogsConfig": {
+					"CloudWatchLogs": {
+						"Status": "ENABLED"
+					},
+					"S3Logs": {
+						"Status": "DISABLED",
+						"EncryptionDisabled": false
+					}
+				}
+			}
+		}
+	}
+}

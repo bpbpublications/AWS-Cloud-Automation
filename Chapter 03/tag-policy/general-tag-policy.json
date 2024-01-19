@@ -1,0 +1,69 @@
+{
+    "tags": {
+        "Env": {
+            "tag_value": {
+                "@@assign": [
+                    "Prod",
+                    "Prd",
+                    "Production",
+                    "DEV",
+                    "Dev",
+                    "dev",
+                    "Staging",
+                    "STAGING",
+                    "QA",
+                    "qa",
+                    "pre-prod",
+                    "PRE-PROD",
+                    "preprod",
+                    "PREPROD",
+                    "TEST",
+                    "Test",
+                    "test",
+                    "PoC",
+                    "POC",
+                    "Poc",
+                    "poc",
+                    "NPROD",
+                    "nPROD",
+                    "nProd",
+                    "nprod",
+                    "Nprod"
+                ]
+            }
+        },
+        "App": {
+            "tag_value": {
+                "@@assign": [
+                    "DB",
+                    "db",
+                    "nondb",
+                    "NONDB"
+                ]
+            }
+        },
+        "Backup": {
+            "tag_value": {
+                "@@assign": [
+                    "True",
+                    "true",
+                    "TRUE",
+                    "Yes",
+                    "YES",
+                    "yes"
+                ]
+            }
+        },
+        "CostCode": {
+            "tag_value": {
+                "@@assign": [
+                    "hr001",
+                    "mamashipper1",
+                    "cloudalltechnologies",
+                    "eng001",
+                    "aiml001"
+                ]
+            }
+        }
+    }
+}

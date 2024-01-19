@@ -1,0 +1,8 @@
+# The following files will be ignored by GIT
+# This prevents accidental loading of GIT files
+
+.terrform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
